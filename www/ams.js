@@ -35,8 +35,6 @@
   */
 var exec = require('cordova/exec');
 var argscheck = require('cordova/argscheck');
-var xFace = require('xFace');
-var localStorage = require('xFace/localStorage');
 var AMS = function(){
 };
 
@@ -141,14 +139,7 @@ AMS.prototype.uninstallApplication = function( appId, successCallback, errorCall
         }
         return;
     }
-    exec(
-    //Success callback
-    function(s)
-    {
-        //删除app存储的数据
-        localStorage.clearAppData(appId);
-        successCallback(s);
-    }, errorCallback, "AMS", "uninstallApplication",[appId]);
+    exec(successCallback, errorCallback, "AMS", "uninstallApplication",[appId]);
 };
 
 /**
