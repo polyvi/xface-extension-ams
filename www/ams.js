@@ -1,4 +1,3 @@
-
 /*
  Copyright 2012-2013, Polyvi Inc. (http://www.xface3.com)
  This program is distributed under the terms of the GNU General Public License.
@@ -55,7 +54,6 @@ cordova.define("xFace/extension/privateModule", function(require, exports, modul
 var exec = require('cordova/exec');
 var argscheck = require('cordova/argscheck');
 var xFace = require('xFace');
-var localStorage = require('xFace/localStorage');
 var AMS = function(){
 };
 
@@ -165,7 +163,6 @@ AMS.prototype.uninstallApplication = function( appId, successCallback, errorCall
     function(s)
     {
         //删除app存储的数据
-        localStorage.clearAppData(appId);
         successCallback(s);
     }, errorCallback, "AMS", "uninstallApplication",[appId]);
 };
