@@ -18,25 +18,6 @@
  You should have received a copy of the GNU General Public License
  along with xFace.  If not, see <http://www.gnu.org/licenses/>.
  */
-cordova.define("xFace/extension/privateModule", function(require, exports, module) {
- var exec = require('cordova/exec');
- var privateModule = function(){};
-
- /**
-  * 该接口用于js调用native功能（没有返回值）
-  */
- privateModule.prototype.execCommand = function(type, args) {
-    if(type === "xFace_close_application:") {
-        exec(null, null, null, "closeApplication", args);
-       } else if(type === "xFace_app_send_message:") {
-        exec(null, null, null, "appSendMessage", args);
-    } else {
-        console.log("Command[" + type + "] is not supported in privateModule.js! ");
-    }
- };
-
- module.exports = new privateModule();
-});
 
 /**
   *该模块定义了xFace应用相关的一系列操作，包括应用的安装，运行，卸载，更新等
@@ -240,7 +221,7 @@ AMS.prototype.startApplication = function(appId, successCallback, errorCallback,
 AMS.prototype.closeApplication = function()
 {
     // FIXME: 接口应该设计为ams.closeApplication(appId)
-    require('xFace/extension/privateModule').execCommand("xFace_close_application:", []);
+    require('com.polyvi.xface.extension.ams.privateModule').execCommand("xFace_close_application:", []);
 };
 
 /**
