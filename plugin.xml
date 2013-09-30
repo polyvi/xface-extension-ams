@@ -27,7 +27,7 @@
     </js-module>
 
     <js-module src="www/privateModule.js" name="privateModule">
-        <clobbers target="xFace.extension.privateModule" />
+        <clobbers target="xFace.AMS.privateModule" />
     </js-module>
     <!-- wp8 -->
     <platform name="wp8">
