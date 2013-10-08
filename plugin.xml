@@ -47,5 +47,17 @@
 
     <!-- ios -->
 
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="AMS">
+                <param name="ios-package" value="XAmsExt" />
+            </feature>
+        </config-file>
+        <header-file src="src/ios/XAms.h" />
+        <header-file src="src/ios/XAmsExt.h" />
+        <source-file src="src/ios/XAmsExt.m" />
+        <header-file src="src/ios/XAmsImpl.h" />
+        <source-file src="src/ios/XAmsImpl.m" />
+    </platform>
 
 </plugin>
