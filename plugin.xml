@@ -26,11 +26,11 @@
         <clobbers target="AmsState" />
     </js-module>
 
-    <js-module src="www/privateModule.js" name="privateModule">
-        <clobbers target="xFace.AMS.privateModule" />
-    </js-module>
     <!-- wp8 -->
     <platform name="wp8">
+        <js-module src="www/wp8/privateModule.js" name="privateModule">
+            <clobbers target="xFace.AMS.privateModule" />
+        </js-module>
         <config-file target="config.xml" parent="/*">
             <feature name="AMS">
                 <param name="wp-package" value="AMS"/>
@@ -43,11 +43,18 @@
     </platform>
 
     <!-- android -->
-
+    <platform name="android">
+        <js-module src="www/android/privateModule.js" name="privateModule">
+            <clobbers target="xFace.AMS.privateModule" />
+        </js-module>
+    </platform>
 
     <!-- ios -->
 
     <platform name="ios">
+        <js-module src="www/ios/privateModule.js" name="privateModule">
+            <clobbers target="xFace.AMS.privateModule" />
+        </js-module>
         <config-file parent="/*" target="config.xml">
             <feature name="AMS">
                 <param name="ios-package" value="XAmsExt" />
