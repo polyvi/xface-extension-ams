@@ -92,9 +92,7 @@ AMS.prototype.installApplication = function( packagePath, successCallback, error
     }
     var win = function(result) {
         if(typeof result.progress != "undefined") {
-            if(result.progress) {
-                statusChangedCallback(result);
-            }
+            statusChangedCallback(result);
         }
         else {
             successCallback(result);
@@ -323,9 +321,7 @@ AMS.prototype.updateApplication = function( packagePath, successCallback, errorC
     }
     var win = function(result) {
         if(typeof result.progress != "undefined") {
-            if(result.progress) {
-                statusChanged(result);
-            }
+            statusChanged(result);
         }
         else {
             successCallback(result);
