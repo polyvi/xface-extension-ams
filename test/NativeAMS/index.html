@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,maximum-scale=1.0,initial-scale=1.0" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"> <!-- ISO-8859-1 -->
+    <title>xFace Native AMS Test</title>
+    <link rel="stylesheet" href="../master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <script type="text/javascript" charset="utf-8" src="../base.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+    function install1() {
+        xFace.AMS.installApplication("NativeAmsTest/test1.npa",win,fail);
+    };
+
+    function install2() {
+        xFace.AMS.installApplication("NativeAmsTest/test2.npa",win,fail);
+    };
+
+    function install3() {
+        xFace.AMS.installApplication("NativeAmsTest/test3.npa",win,fail);
+    };
+
+    function uninstall1() {
+        xFace.AMS.uninstallApplication("1",win,fail);
+
+    };
+
+    function uninstall2() {
+        xFace.AMS.uninstallApplication("2",win,fail);
+
+    };
+
+    function uninstall3() {
+        xFace.AMS.uninstallApplication("3",win,fail);
+
+    };
+
+    function startApp1() {
+        xFace.AMS.startApplication("1",win,fail,"");
+    };
+
+    function startApp2() {
+        xFace.AMS.startApplication("2", win, fail);
+    };
+
+
+    function startApp3() {
+        xFace.AMS.startApplication("3",win, fail);
+    };
+
+    function updateApp() {
+        xFace.AMS.updateApplication("NativeAmsTest/update.npa",win,fail);
+    };
+    function quiet(){}
+    function win(win) {
+        alert("Success!");
+    };
+
+    function fail(fail) {
+        alert("Fail!");
+    };
+
+    function success(list){
+    var mainDiv = document.getElementById("result");
+    mainDiv.innerHTML = null;
+    if(null == list||"" == list) {
+    alert("未安装程序！")
+    return;
+    }
+    var i;
+    var str = "";
+    var len = list.length;
+    for (i=0;i<len;i++)
+    {
+        var div = document.createElement('div');
+        var img = document.createElement('img');
+        mainDiv.appendChild(div);
+        mainDiv.appendChild(document.createElement("br"));
+        mainDiv.appendChild(img);
+        mainDiv.appendChild(document.createElement("br"));
+        var s = "appid:"+list[i].appid+";"+"name:"+list[i].name+";"+"type:"+list[i].type +";" + "version:"+
+        list[i].version+";"+"icon:";
+        div.innerText = s;
+        img.src = list[i].icon;
+    }
+    };
+
+    function error(err){
+        alert(err);
+    };
+
+    function getAppList() {
+        xFace.AMS.listInstalledApplications(success,error);
+    }
+
+    </script>
+    </head>
+    <body id="stage" class="theme">
+    <h1>Native AMS<span id="showInfo">?</span></h1>
+     <div id="descr">
+        测试说明: <br/>
+        <android>
+            开始测试前, 需要将workspace中的文件test1.npa test2.npa test3.npa update.npa拷贝到NativeAmsTest下<br/>
+            测试通过条件如下：
+            1>. 分别有安装程序1， 2， 3 有系统安装程序界面弹出 且安装成功<br/>
+            2>. 获得安装程序列表，则能弹出已经安装程序的包名<br/>
+            3>. 更新程序 则有程序能被正确的更新<br/>
+            4>. 启动程序1 ，2， 3   程序都能被正确启动<br/>
+            5>. 卸载程序1， 2， 3 ，有则先前被安装的程序会被卸载<br/>
+        </android>
+    </div>
+     <div id="info">
+             测试通过条件如下：
+            1>. 分别安装程序1， 2， 3 ，有系统安装程序界面弹出 且安装成功<br/>
+            2>. 获得安装程序列表，则能弹出已经安装程序的包名<br/>
+            3>. 更新程序 则有程序能被正确的更新<br/>
+            4>. 启动程序1 ，2， 3   程序都能被正确启动<br/>
+            5>. 卸载程序1， 2， 3 ，则先前被安装的程序会被卸载<br/>
+    </div>
+        <h3>测试本地程序管理</h3>
+        <h4>测试对本地程序管理，包括安装,卸载,更新,启动,获取安装程序列表等,</h4>
+        <h3>安装程序</h3>
+        <input type="button" onclick ="install1()" value="安装程序1" />
+        <input type="button" onclick ="install2()" value="安装程序2"/>
+        <input type="button" onclick ="install3()" value="安装程序3"/><br/>
+        <h3>获得安装程序列表</h3>
+        <input type="button"  onclick ="getAppList()" value="得到安装程序列表"></input><br/>
+        <h3>更新程序</h3>
+        <input type="button"  onclick ="updateApp()" value="更新程序"></input><br/>
+        <h3>启动程序</h3>
+        <input type="button" onclick ="startApp1()" value="启动程序1"/>
+        <input type="button" onclick ="startApp2()" value="启动程序2"/>
+        <input type="button" onclick ="startApp3()" value="启动程序3"/><br>
+        <h3>卸载程序</h3>
+        <input type="button" onclick ="uninstall1()" value="卸载程序1"/>
+        <input type="button" onclick ="uninstall2()" value="卸载程序2"/>
+        <input type="button" onclick ="uninstall3()" value="卸载程序3"/><br>
+        <div style="border:solid thin yellow;"id="result">
+        </div>
+        <h2> </h2><div class="backBtn" onclick="backHome();">Back</div>
+    </body>
+</html>
