@@ -8,7 +8,7 @@ using xFaceLib.extensions.ams;
 
 namespace WPCordovaClassLib.Cordova.Commands
 {
-    public class AMS : BaseCommand
+    public class AMS : XBaseCommand
     {
         private XAms ams;
 
@@ -27,7 +27,7 @@ namespace WPCordovaClassLib.Cordova.Commands
                 DispatchCommandResult(result, callbackId);
             };
             listener.DispatchPluginResult += DispatchPluginResult;
-            ams.InstallApp(packagePath, listener);
+            ams.InstallApp(this.app, packagePath, listener);
         }
 
         public void updateApplication(string options)
@@ -40,7 +40,7 @@ namespace WPCordovaClassLib.Cordova.Commands
                 DispatchCommandResult(result, callbackId);
             };
             listener.DispatchPluginResult += DispatchPluginResult;
-            ams.UpdateApp(packagePath, listener);
+            ams.UpdateApp(this.app, packagePath, listener);
         }
 
         public void uninstallApplication(string options)

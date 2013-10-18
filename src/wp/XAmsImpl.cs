@@ -23,15 +23,17 @@ namespace xFaceLib.extensions.ams
             return appManagement.StartApp(appId, appparams);
         }
 
-        public void InstallApp(String path, XAppInstallListener listener)
+        public void InstallApp(XApplication app, String path, XAppInstallListener listener)
         {
-            String abspath = XUtils.BuildabsPathOnIsolatedStorage(path);
+            String tmp = ResolvePathUsingWorkspace(app.GetWorkSpace(), path);
+            String abspath = XUtils.BuildabsPathOnIsolatedStorage(tmp);
             appManagement.InstallApp(abspath, listener);
         }
 
-        public void UpdateApp(String path, XAppInstallListener listener)
+        public void UpdateApp(XApplication app, String path, XAppInstallListener listener)
         {
-            String abspath = XUtils.BuildabsPathOnIsolatedStorage(path);
+            String tmp = ResolvePathUsingWorkspace(app.GetWorkSpace(), path);
+            String abspath = XUtils.BuildabsPathOnIsolatedStorage(tmp);
             appManagement.UpdateApp(abspath, listener);
         }
 
@@ -64,6 +66,20 @@ namespace xFaceLib.extensions.ams
         {
             return appManagement.GetAppList().GetDefaultApp().AppInfo;
         }
-
+        /// <summary>
+        /// 转换path到app的workspace下
+        /// </summary>
+        /// <param name="workspace">app的workspace</param>
+        /// <param name="path">待转换的path</param>
+        /// <returns>返回相对独立存储，以app的workspace开头的path</returns>
+        String ResolvePathUsingWorkspace(String workspace,String path)
+        {
+            string resolvedPath = XUtils.ResolvePath(workspace, path);
+            if (String.IsNullOrEmpty(path))
+            {
+                return workspace;
+            }
+            return resolvedPath;
+        }
     }
 }

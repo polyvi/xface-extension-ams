@@ -20,14 +20,16 @@ namespace xFaceLib.extensions.ams
         /// <summary>
         /// 安装一个应用
         /// </summary>
+        /// <param name="app">调用该接口的应用对象</param>
         /// <param name="path">应用安装包的相对路径</param>
-        void InstallApp(String path, XAppInstallListener listener);
+        void InstallApp(XApplication app, String path, XAppInstallListener listener);
 
         /// <summary>
         /// 更新一个应用
         /// </summary>
+        /// <param name="app">调用该接口的应用对象</param>
         /// <param name="path">应用安装包的相对路径</param>
-        void UpdateApp(String path, XAppInstallListener listener);
+        void UpdateApp(XApplication app, String path, XAppInstallListener listener);
 
         /// <summary>
         /// 卸载应用
