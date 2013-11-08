@@ -14,8 +14,8 @@ namespace xFaceLib.extensions.ams
         /// </summary>
         /// <param name="appId">应用的id</param>
         /// <param name="appparams">启动程序参数</param>
-        /// <returns>启动成功返回ture，失败返回false</returns>
-        bool StartApp(String appId, String appparams);
+        /// <returns>启动应用的错误码</returns>
+        AMS_ERROR StartApp(String appId, String appparams);
 
         /// <summary>
         /// 安装一个应用

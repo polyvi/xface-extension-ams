@@ -18,9 +18,9 @@ namespace xFaceLib.extensions.ams
             this.appManagement = appManagement;
         }
 
-        public bool StartApp(String appId, String appparams)
+        public AMS_ERROR StartApp(String appId, String appparams)
         {
-            return appManagement.StartApp(appId, appparams);
+            return appManagement.StartApp(appId, XStartParams.Parse(appparams));
         }
 
         public void InstallApp(XApplication app, String path, XAppInstallListener listener)

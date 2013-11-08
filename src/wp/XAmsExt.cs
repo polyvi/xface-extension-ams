@@ -60,14 +60,17 @@ namespace WPCordovaClassLib.Cordova.Commands
         {
             string appid = JSON.JsonHelper.Deserialize<string[]>(options)[0];
             string appparams = JSON.JsonHelper.Deserialize<string[]>(options)[1];
-            bool status = ams.StartApp(appid, appparams);
-            if (status)
+            AMS_ERROR code = ams.StartApp(appid, appparams);
+            if (code == AMS_ERROR.ERROR_BASE)
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.OK, appid));
             }
             else
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.ERROR, appid));
+                string res = String.Format("\"errorcode\":\"{0}\",\"appid\":\"{1}\"", ((int)code).ToString(), appid);
+                res = "{" + res + "}";
+                xFaceLib.Log.XLog.WriteInfo("-------------------AMS startApplication Error result:" + res);
+                DispatchCommandResult(new PluginResult(PluginResult.Status.ERROR, res));
             }
         }
 

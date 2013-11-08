@@ -11,7 +11,11 @@ describe('AMS (xFace.AMS)', function () {
         expect(AmsError.IO_ERROR).toBe(3);
         expect(AmsError.NO_TARGET_APP).toBe(4);
         expect(AmsError.NO_APP_CONFIG_FILE).toBe(5);
-        expect(AmsError.UNKNOWN).toBe(7);
+        expect(AmsError.APP_NOT_FOUND).toBe(7);
+        expect(AmsError.APP_ALREADY_RUNNING).toBe(8);
+        expect(AmsError.APP_ENTRY_ERR).toBe(9);
+        expect(AmsError.START_NATIVE_APP_ERR).toBe(10);
+        expect(AmsError.UNKNOWN).toBe(11);
     });
 
     it("should define constants for AmsState", function() {
@@ -155,6 +159,7 @@ describe('AMS (xFace.AMS)', function () {
                     expect(win).not.toHaveBeenCalled();
                 });
             });
+
         //测试安装app,app包错误没有相应的配置文件,app应用包存在(在workspace的appPackage/errorappnoappxml.zip) 应该安装失败并调用失败的回调函数 错误码为5 安装包中不存在应用配置文件
         it("test install app with error app package(no app.xml)!!error callback should be called with an json string", function() {
             var win = jasmine.createSpy(),
@@ -343,9 +348,10 @@ describe('AMS (xFace.AMS)', function () {
         //测试启动app,目标app不存在，错误回调返回相应的appid
         it("test start app with not exist app!! error callback should be called with an json string", function() {
             var win = jasmine.createSpy(),
-            fail = jasmine.createSpy().andCallFake(function(info) {
-                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
-                expect(info == 'teststartnotexistapp').toBe(true);
+            fail = jasmine.createSpy().andCallFake(function(error) {
+                expect(typeof info == 'string'|| typeof error == 'object').toBe(true);
+                expect(error.appid == 'teststartnotexistapp').toBe(true);
+                expect(error.errorcode == AmsError.APP_NOT_FOUND).toBe(true);
             });
 
             runs(function () {
