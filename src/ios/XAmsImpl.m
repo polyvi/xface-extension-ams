@@ -95,7 +95,7 @@
     NSArray *subFileNames = [fileManager contentsOfDirectoryAtPath:presetDirPath error:&error];
     if(error)
     {
-        XLogE(@"Can't get content file of directory: %@, error: %@", presetDirPath, [error localizedDescription]);
+        ALog(@"Can't get content file of directory: %@, error: %@", presetDirPath, [error localizedDescription]);
         return nil;
     }
     if([subFileNames count] == 0)
