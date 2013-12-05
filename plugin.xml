@@ -26,6 +26,10 @@
         <clobbers target="AmsState" />
     </js-module>
 
+    <js-module src="www/app.js" name="app">
+        <clobbers target="xFace.app" />
+    </js-module>
+
     <!-- wp8 -->
     <platform name="wp8">
         <js-module src="www/wp8/privateModule.js" name="privateModule">
