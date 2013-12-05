@@ -19,8 +19,10 @@
  along with xFace.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "XAmsExt.h"
-#import "XAms.h"
+#import <Cordova/CDVInvokedUrlCommand.h>
+#import <Cordova/CDVPluginResult.h>
+#import <Cordova/NSArray+Comparisons.h>
+
 #import <XFace/XAppInstallListener.h>
 #import <XFace/XApplication.h>
 #import <XFace/XAppInfo.h>
@@ -28,17 +30,15 @@
 #import <XFace/XConfiguration.h>
 #import <XFace/XUtils.h>
 #import <XFace/XConstants.h>
-#import <XFace/XAppView.h>
-#import "XAmsImpl.h"
 #import <XFace/XAppManagement.h>
 #import <XFace/XRuntime.h>
-#import <XFace/XViewController.h>
+#import <xFace/XRuntime_Privates.h>
+#import <xFace/XJavaScriptEvaluator.h>
 
-#import <Cordova/CDVInvokedUrlCommand.h>
-#import <Cordova/CDVPluginResult.h>
-#import <Cordova/NSArray+Comparisons.h>
-
-#define AMS_EXTENSION_NAME                  @"AMS"
+#import "XAmsImpl.h"
+#import "XAmsExt.h"
+#import "XAms.h"
+#import "AppDelegate.h"
 
 // 定义构造ExtResult使用的key常量
 #define EXTENSION_RESULT_APP_ID             @"appid"
@@ -56,19 +56,22 @@
 {
     self = (id)[super initWithWebView:theWebView];
     if (self) {
-        id<UIApplicationDelegate> appDelegate = [UIApplication sharedApplication].delegate;
-        XRuntime *runtime = [appDelegate performSelector:@selector(runtime)];
-        XAppManagement *appManagement = [runtime performSelector:@selector(appManagement)];
-        XViewController *viewController = [runtime performSelector:@selector(viewController)];
-
         //只有default app才能注册ams扩展
-        if (theWebView != viewController.webView) {
+        if (![XUtils isDefaultAppWebView:theWebView]) {
             self = nil;
-        } else {
-            self->ams = [[XAmsImpl alloc] init:appManagement];
         }
     }
     return self;
+}
+
+- (void)pluginInitialize
+{
+    //FIXME:获取appManagement的代码有待美化
+    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    XRuntime *runtime = [appDelegate performSelector:@selector(runtime)];
+    XAppManagement *appManagement = [runtime performSelector:@selector(appManagement)];
+
+    self->ams = [[XAmsImpl alloc] init:appManagement];
 }
 
 - (void) installApplication:(CDVInvokedUrlCommand*)command
@@ -166,18 +169,14 @@
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
-+ (NSString*) getExtName
-{
-    return AMS_EXTENSION_NAME;
-}
-
 #pragma mark private methods
 
 - (NSArray *) buildArgsWithOperationType:(OPERATION_TYPE)type packagePath:(NSString *)pkgPath appId:(NSString *)appId callbackId:(NSString *)callbackId
 {
     id<XApplication> app = [self ownerApp];
 
-    id<XInstallListener> listener = [[XAppInstallListener alloc] initWithJsEvaluator:self.commandDelegate callbackId:callbackId];
+    NSAssert([self.commandDelegate isKindOfClass:[XJavaScriptEvaluator class]], nil);
+    id<XInstallListener> listener = [[XAppInstallListener alloc] initWithJsEvaluator:(XJavaScriptEvaluator *)self.commandDelegate callbackId:callbackId];
 
     NSArray *args = nil;
     switch (type) {
