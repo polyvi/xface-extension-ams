@@ -189,25 +189,12 @@ var app =
             //如果是portal,则消息接收者是所有的app，如果是app，则消息接收者是portal
             var msgId = generateUniqueMsgId();
             localStorage.setItem(msgId, toString(data));
-            require('com.polyvi.xface.extension.ams.privateModule').execCommand("xFace_app_send_message:", [msgId]);
+            require('xFace/plugin/privateModule').execCommand("xFace_app_send_message:", [msgId]);
         }else if(args.length === 2){
             //TODO
             //发送消息给指定的app
             alert('specified app');
         }
-    },
-
-    /**
-     * 关闭当前应用app（Android, iOS, WP8）
-     * 如果当前只有一个app,在android平台上则退出xFace;在iOS平台上由于系统限制不退出xFace!!
-     * @example
-            xFace.app.close();
-     * @method close
-     * @platform Android, iOS, WP8
-     * @since 3.0.0
-     */
-    close:function() {
-        require('com.polyvi.xface.extension.ams.privateModule').execCommand("xFace_close_application:", []);
     }
 };
 module.exports = app;

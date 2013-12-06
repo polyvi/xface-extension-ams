@@ -202,22 +202,6 @@ AMS.prototype.startApplication = function(appId, successCallback, errorCallback,
 };
 
 /**
- * 关闭当前应用app（Android, iOS, WP8）
- * 如果当前只有一个app,在android平台上则退出xFace;在iOS平台上由于系统限制不退出xFace!!
- * @example
-        xFace.AMS.closeApplication();
- * @method closeApplication
- * @platform Android, iOS, WP8
- * @since 3.0.0
- * @deprecated 若应用想关闭自己，请调用xFace.app.close()
- */
-AMS.prototype.closeApplication = function()
-{
-    // FIXME: 接口应该设计为ams.closeApplication(appId)
-    require('com.polyvi.xface.extension.ams.privateModule').execCommand("xFace_close_application:", []);
-};
-
-/**
  * 列出系统已经安装的app列表（Android, iOS, WP8）
  * @example
          function successCallback(apps) {
