@@ -71,7 +71,7 @@
     [self->appManagement updateApp:resolvedPath withListener:listener];
 }
 
-- (BOOL) startApp:(NSString *)appId withParameters:(NSString *)params
+- (AMS_ERROR) startApp:(NSString *)appId withParameters:(NSString *)params
 {
     return [self->appManagement startApp:appId withParameters:params];
 }

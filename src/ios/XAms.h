@@ -20,6 +20,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <XFace/XAmsConstants.h>
 
 @protocol XInstallListener;
 
@@ -60,9 +61,9 @@
 	启动应用
 	@param appId  应用id
 	@param params 应用启动参数
-    @return 启动是否成功
+	@return AMS_ERROR
  */
-- (BOOL) startApp:(NSString *)appId withParameters:(NSString *)params;
+- (AMS_ERROR) startApp:(NSString *)appId withParameters:(NSString *)params;
 
 /**
 	获取已安装应用列表

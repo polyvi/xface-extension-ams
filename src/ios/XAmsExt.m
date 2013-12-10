@@ -107,9 +107,10 @@
     NSString *appId = [command.arguments objectAtIndex:0];
     NSString *params = [command.arguments objectAtIndex:1 withDefault:nil];
 
-    BOOL successful = [self->ams startApp:appId withParameters:params];
-    CDVCommandStatus status = successful ? CDVCommandStatus_OK : CDVCommandStatus_ERROR;
-    CDVPluginResult *result = [CDVPluginResult resultWithStatus:status messageAsString:appId];
+    AMS_ERROR ret = [self->ams startApp:appId withParameters:params];
+    CDVCommandStatus status = ret == ERROR_BASE ? CDVCommandStatus_OK : CDVCommandStatus_ERROR;
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:status
+                                            messageAsDictionary:@{@"errorcode":@(ret), @"appid":appId}];
 
     // 将扩展结果返回给js端
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
