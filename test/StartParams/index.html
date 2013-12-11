@@ -1,1 +1,100 @@
-﻿<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.  See the NOTICE file distributed with this work for additional information regarding copyright ownership.  The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at   http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the License for the specific language governing permissions and limitations under the License.--><!DOCTYPE html><html>  <head>    <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,maximum-scale=1.0,initial-scale=1.0" />    <meta http-equiv="Content-type" content="text/html; charset=utf-8"> <!-- ISO-8859-1 -->    <title>xFace Mobile Spec</title>    <link rel="stylesheet" href="../master.css" type="text/css" media="screen" title="no title" charset="utf-8">    <script type="text/javascript" charset="utf-8" src="../base.js"></script><script type="text/javascript" charset="utf-8">        document.addEventListener("deviceready", function(startParams) {        });				function  install()		{			xFace.AMS.installApplication("Params/params.zip", function(){alert('success');}, function(){alert('fail');});		}		function  uninstall()		{		xFace.AMS.uninstallApplication("params", function(){alert('success');}, function(){alert('fail');});		}		function start()		{			xFace.AMS.startApplication("params",function(){alert('success');}, function(){alert('fail');},"123456");		}</script>  <body id="stage" class="theme">	<h1>Start Params<span id="showInfo">?</span></h1> <div id="descr">    </anroid>		测试说明(测试之前需要首先将workspace中的params.zip拷贝到Params目录下): <br/>		首先点击点击安装程序，弹出安装成功，然后启动程序，弹出字符串“123456“，则测试通过	</anroid> </div>  <div id="info">         测试说明(测试之前需要首先将workspace中的params.zip拷贝到Params目录下): <br/>	    首先点击点击安装程序，弹出安装成功，然后启动程序，弹出字符串“123456“，则测试通过    </div>	<input type="button" onclick ="install()" value="安装程序" />	<input type="button" onclick ="start()" value="启动程序" />	<input type="button" onclick ="uninstall()" value="卸载程序" />    <h2> </h2><div class="backBtn" onclick="backHome();">Back</div>  </body></html>
+<!--
+
+
+
+ Licensed to the Apache Software Foundation (ASF) under one
+
+ or more contributor license agreements.  See the NOTICE file
+
+ distributed with this work for additional information
+
+ regarding copyright ownership.  The ASF licenses this file
+
+ to you under the Apache License, Version 2.0 (the
+
+ "License"); you may not use this file except in compliance
+
+ with the License.  You may obtain a copy of the License at
+
+
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+
+
+ Unless required by applicable law or agreed to in writing,
+
+ software distributed under the License is distributed on an
+
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+
+ KIND, either express or implied.  See the License for the
+
+ specific language governing permissions and limitations
+
+ under the License.
+
+
+
+-->
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,maximum-scale=1.0,initial-scale=1.0" />
+
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"> <!-- ISO-8859-1 -->
+
+    <title>xFace Mobile Spec</title>
+
+    <link rel="stylesheet" href="../master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+
+    <script type="text/javascript" charset="utf-8" src="../base.js"></script>
+<script type="text/javascript" charset="utf-8">
+        document.addEventListener("deviceready", function(startParams) {
+        });
+		
+		function  install()
+		{
+			xFace.AMS.installApplication("Params/params.zip", 
+			function(){
+                alert('Install success!');
+			}, 
+			function(info){
+                alert('Install failed!');
+                if(info.errorcode == AmsError.NO_SRC_PACKAGE){
+                alert("请先执行“卸载程序”，再手动拷贝workspace/params.zip到workspace/Params/params.zip")
+                }
+			});
+		}
+		function  uninstall()
+		{
+		    xFace.AMS.uninstallApplication("params", function(){alert('Uninstall success!');}, function(){alert('Uninstall failed!');});
+		}
+		function start()
+		{
+			xFace.AMS.startApplication("params",function(){}, function(){alert('Start app failed!');},"123456");
+		}
+</script>
+ 
+ <body id="stage" class="theme">
+	<h1>Start Params</h1>
+    <div id="descr">
+		测试说明: <br/>
+	    1. 点击“安装程序”，弹出“安装成功”；<br/>
+	    2. 点击“启动程序”，弹出字符串“123456”<br/><br/>
+	    注意：由于workspace/Params/params.zip在第一次安装后被删除，所以执行多次安装时，请先执行“卸载程序”，
+	    再手动拷贝workspace/params.zip到workspace/Params/params.zip
+    </div><br/>
+	<input type="button" onclick ="install()" value="安装程序" /><br/>
+	<input type="button" onclick ="start()" value="启动程序" /><br/>
+	<input type="button" onclick ="uninstall()" value="卸载程序" /><br/>
+    <h2> </h2><div class="backBtn" onclick="backHome();">Back</div>
+  </body>
+
+</html>
