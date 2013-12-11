@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,maximum-scale=1.0,initial-scale=1.0" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"> <!-- ISO-8859-1 -->
+    <title>>App Communications Tests</title>
+    <link rel="stylesheet" href="../master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <script type="text/javascript" charset="utf-8" src="../base.js"></script>
+    <script type="text/javascript" charset="utf-8">
+     document.addEventListener('deviceready', registerAppListener);
+     function registerAppListener()
+     {
+        xFace.app.addEventListener('message', function(data){
+            alert("DefaultApp: " + data);
+            xFace.app.sendMessage(data);
+        });
+        xFace.app.addEventListener('start', function(){alert('Start success!');});
+        xFace.app.addEventListener('close', function(){alert('Close success!');});
+     }
+
+     function install()
+     {
+        xFace.AMS.installApplication("communicate/appCommunicate.zip",
+        function(){alert('Install success!')},
+        function(info){
+            alert('Install failed!');
+            if(info.errorcode == AmsError.NO_SRC_PACKAGE){
+                alert("请先执行“卸载程序”，再手动拷贝workspace/appCommunicate.zip到workspace/communicate/appCommunicate.zip")
+            }
+        });
+     }
+
+     function start()
+     {
+         xFace.AMS.startApplication("appCommunicate");
+     }
+
+     function  uninstall()
+     {
+        xFace.AMS.uninstallApplication("appCommunicate", function(){alert('Uninstall success!');}, function(){alert('Uninstall failed!');});
+     }
+
+</script>
+</head>
+
+<body id="stage" class="theme">
+	<h1>App间通信</h1>
+    <div id="descr">
+        测试说明: <br/>
+        1. 点击“安装程序”，弹出"Install success"；<br/>
+        2. 点击“启动程序”，弹出“Start success!”；<br/>
+        3. 进入appCommunicate应用后，按照页面提示进行操作<br/><br/>
+        注意：由于workspace/communicate/appCommunicate.zip在第一次安装后被删除，所以执行多次安装时，请先执行“卸载程序”，
+        再手动拷贝workspace/appCommunicate.zip到workspace/communicate/appCommunicate.zip
+    </div><br/>
+	<input type="button" onclick ="install()" value="安装程序" /><br/>
+	<input type="button" onclick ="start()" value="启动程序" /><br/>
+	<input type="button" onclick ="uninstall()" value="卸载程序" /><br/>
+    <h2> </h2><div class="backBtn" onclick="backHome();">Back</div>
+  </body>
+</html>
