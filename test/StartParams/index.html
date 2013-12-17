@@ -76,7 +76,7 @@
 		{
 		    xFace.AMS.uninstallApplication("params", function(){alert('Uninstall success!');}, function(){alert('Uninstall failed!');});
 		}
-		function start()
+		function startApp()
 		{
 			xFace.AMS.startApplication("params",function(){}, function(){alert('Start app failed!');},"123456");
 		}
@@ -92,7 +92,7 @@
 	    再手动拷贝workspace/params.zip到workspace/Params/params.zip
     </div><br/>
 	<input type="button" onclick ="install()" value="安装程序" /><br/>
-	<input type="button" onclick ="start()" value="启动程序" /><br/>
+	<input type="button" onclick ="startApp()" value="启动程序" /><br/>
 	<input type="button" onclick ="uninstall()" value="卸载程序" /><br/>
     <h2> </h2><div class="backBtn" onclick="backHome();">Back</div>
   </body>
