@@ -26,10 +26,6 @@
         <clobbers target="AmsState" />
     </js-module>
 
-    <js-module src="www/app.js" name="app">
-        <merges target="xFace.app" />
-    </js-module>
-
     <!-- wp8 -->
     <platform name="wp8">
         <config-file target="config.xml" parent="/*">
@@ -38,19 +34,27 @@
             </feature>
         </config-file>
 
+        <js-module src="www/wp/app.js" name="app">
+            <merges target="xFace.app" />
+        </js-module>
+
         <source-file src="src/wp/XAms.cs" />
         <source-file src="src/wp/XAmsExt.cs" />
         <source-file src="src/wp/XAmsImpl.cs" />
     </platform>
 
     <!-- ios -->
-
     <platform name="ios">
         <config-file parent="/*" target="config.xml">
             <feature name="AMS">
                 <param name="ios-package" value="XAmsExt" />
             </feature>
         </config-file>
+
+        <js-module src="www/app.js" name="app">
+            <merges target="xFace.app" />
+        </js-module>
+
         <header-file src="src/ios/XAms.h" />
         <header-file src="src/ios/XAmsExt.h" />
         <source-file src="src/ios/XAmsExt.m" />
@@ -58,4 +62,10 @@
         <source-file src="src/ios/XAmsImpl.m" />
     </platform>
 
+    <!-- android -->
+    <platform name="android">
+        <js-module src="www/app.js" name="app">
+            <merges target="xFace.app" />
+        </js-module>
+    </platform>
 </plugin>
