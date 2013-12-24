@@ -25,14 +25,16 @@ namespace xFaceLib.extensions.ams
 
         public void InstallApp(XApplication app, String path, XAppInstallListener listener)
         {
-            String tmp = ResolvePathUsingWorkspace(app.GetWorkSpace(), path);
+            bool isAbsolute = path.StartsWith("/") || path.StartsWith("\\");
+            String tmp = isAbsolute ? path : ResolvePathUsingWorkspace(app.GetWorkSpace(), path);
             String abspath = XUtils.BuildabsPathOnIsolatedStorage(tmp);
             appManagement.InstallApp(abspath, listener);
         }
 
         public void UpdateApp(XApplication app, String path, XAppInstallListener listener)
         {
-            String tmp = ResolvePathUsingWorkspace(app.GetWorkSpace(), path);
+            bool isAbsolute = path.StartsWith("/") || path.StartsWith("\\");
+            String tmp = isAbsolute ? path : ResolvePathUsingWorkspace(app.GetWorkSpace(), path);
             String abspath = XUtils.BuildabsPathOnIsolatedStorage(tmp);
             appManagement.UpdateApp(abspath, listener);
         }
