@@ -49,6 +49,7 @@
 #define EXTENSION_RESULT_APP_TYPE           @"type"
 #define EXTENSION_RESULT_APP_WIDTH          @"width"
 #define EXTENSION_RESULT_APP_HEIGHT         @"height"
+#define EXTENSION_RESULT_ERROR_CODE         @"errorcode"
 
 @implementation XAmsExt
 
@@ -110,7 +111,7 @@
     AMS_ERROR ret = [self->ams startApp:appId withParameters:params];
     CDVCommandStatus status = ret == ERROR_BASE ? CDVCommandStatus_OK : CDVCommandStatus_ERROR;
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:status
-                                            messageAsDictionary:@{@"errorcode":@(ret), @"appid":appId}];
+                                            messageAsDictionary:@{EXTENSION_RESULT_ERROR_CODE:@(ret), EXTENSION_RESULT_APP_ID:appId}];
 
     // 将扩展结果返回给js端
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
