@@ -21,3 +21,15 @@
 -->
 
 # Release Notes
+### 1.0.0 Tue Jan 07 2014 16:08:41 GMT+0800 (CST)
+ *  [android]Modify code to errorcode in error callback of startApplication method
+ *  Use 'btn large' style in manual tests
+ *  [iOS] Do not hard code strings. Use macros.
+ *  [wp8]update ams support install/update absolutePkgPath
+ *  [wp8]fixed wp appsendMessage not work!
+ *  fix click start not work on wp8 change start-->startApp,
+ *  Modify spelling mistake in spec.html
+ *  Added test cases for inter-app communications
+ *  Updated StartParams test cases
+ *  [iOS] Fix ams.spec.22:  ams should return a specific error code if startApp failed.
+ *  Tag jasmine unit tests with unique id
