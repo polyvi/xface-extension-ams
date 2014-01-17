@@ -1,86 +1,46 @@
-<!--
-
-
-
- Licensed to the Apache Software Foundation (ASF) under one
-
- or more contributor license agreements.  See the NOTICE file
-
- distributed with this work for additional information
-
- regarding copyright ownership.  The ASF licenses this file
-
- to you under the Apache License, Version 2.0 (the
-
- "License"); you may not use this file except in compliance
-
- with the License.  You may obtain a copy of the License at
-
-
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-
-
- Unless required by applicable law or agreed to in writing,
-
- software distributed under the License is distributed on an
-
- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-
- KIND, either express or implied.  See the License for the
-
- specific language governing permissions and limitations
-
- under the License.
-
-
-
--->
-
-
-
 <!DOCTYPE html>
-
 <html>
-
-  <head>
-
     <meta name="viewport" content="width=device-width,height=device-height,user-scalable=no,maximum-scale=1.0,initial-scale=1.0" />
-
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"> <!-- ISO-8859-1 -->
-
     <title>xFace Mobile Spec</title>
-
     <link rel="stylesheet" href="../master.css" type="text/css" media="screen" title="no title" charset="utf-8">
-
     <script type="text/javascript" charset="utf-8" src="../base.js"></script>
-<script type="text/javascript" charset="utf-8">
+    <script type="text/javascript" charset="utf-8">
         document.addEventListener("deviceready", function(startParams) {
         });
-		
-		function  install()
-		{
-			xFace.AMS.installApplication("Params/params.zip", 
-			function(){
+
+        function  install()
+        {
+            function statusChanged(status) {
+                if (AmsState.INSTALL_INSTALLING == status.progress) {
+                    alert("安装中...请稍等");
+                }
+
+                if (AmsState.INSTALL_FINISHED == status.progress) {
+                    alert("安装完成!");
+                }
+            };
+            xFace.AMS.installApplication("Params/params.zip",
+            function(){
                 alert('Install success!');
-			}, 
-			function(info){
+            },
+            function(info){
                 alert('Install failed!');
                 if(info.errorcode == AmsError.NO_SRC_PACKAGE){
-                alert("请先执行“卸载程序”，再手动拷贝workspace/params.zip到workspace/Params/params.zip")
+                    alert("请先执行“卸载程序”，再手动拷贝workspace/params.zip到workspace/Params/params.zip")
                 }
-			});
-		}
-		function  uninstall()
-		{
-		    xFace.AMS.uninstallApplication("params", function(){alert('Uninstall success!');}, function(){alert('Uninstall failed!');});
-		}
-		function startApp()
-		{
-			xFace.AMS.startApplication("params",function(){}, function(){alert('Start app failed!');},"123456");
-		}
-</script>
+            },
+            statusChanged);
+        }
+        function  uninstall()
+        {
+            xFace.AMS.uninstallApplication("params", function(){alert('Uninstall success!');}, function(){alert('Uninstall failed!');});
+        }
+        function startApp()
+        {
+            xFace.AMS.startApplication("params",function(){}, function(){alert('Start app failed!');},"123456");
+        }
+    </script>
  
  <body id="stage" class="theme">
 	<h1>Start Params</h1>

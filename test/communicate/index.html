@@ -20,6 +20,15 @@
 
      function install()
      {
+        function statusChanged(status) {
+            if (AmsState.INSTALL_INSTALLING == status.progress) {
+                alert("安装中...请稍等");
+            }
+
+            if (AmsState.INSTALL_FINISHED == status.progress) {
+                alert("安装完成!");
+            }
+        };
         xFace.AMS.installApplication("communicate/appCommunicate.zip",
         function(){alert('Install success!')},
         function(info){
@@ -27,7 +36,8 @@
             if(info.errorcode == AmsError.NO_SRC_PACKAGE){
                 alert("请先执行“卸载程序”，再手动拷贝workspace/appCommunicate.zip到workspace/communicate/appCommunicate.zip")
             }
-        });
+        },
+        statusChanged);
      }
 
      function startApp()
