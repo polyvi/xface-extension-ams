@@ -33,3 +33,7 @@
  *  Updated StartParams test cases
  *  [iOS] Fix ams.spec.22:  ams should return a specific error code if startApp failed.
  *  Tag jasmine unit tests with unique id
+### 1.0.1 Mon Jan 27 2014 15:56:26 GMT+0800 (CST)
+ *  batch modify .reviewboard
+ *  Increase tester test experience in StartParams test and apps communication test
+ *  Incremented plugin version on dev branch to 1.0.1-dev
