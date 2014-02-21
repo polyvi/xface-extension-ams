@@ -10,6 +10,8 @@
     <license>GPLv3</license>
     <keywords>cordova,xface,AMS</keywords>
 
+    <dependency id="org.apache.cordova.file" />
+
     <js-module src="www/ams.js" name="AMS">
         <clobbers target="xFace.AMS" />
     </js-module>
