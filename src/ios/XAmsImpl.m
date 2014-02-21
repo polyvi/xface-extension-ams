@@ -25,6 +25,9 @@
 #import <XFace/XApplication.h>
 #import <XFace/XUtils.h>
 #import <XFace/XConstants.h>
+#import <xFace/XViewController.h>
+
+#import "CDVFile+XFile.h"
 
 @implementation XAmsImpl
 
@@ -45,9 +48,8 @@
     NSString *pkgPath = [arguments objectAtIndex:1];
     id<XInstallListener> listener = [arguments objectAtIndex:2];
 
-    // 处理pkgPath以"/"开始的问题，兼容其为绝对路径以及相对app workspace的情况
-    BOOL ret = [pkgPath hasPrefix:FILE_SEPARATOR] && [[NSFileManager defaultManager] fileExistsAtPath:pkgPath];
-    NSString *resolvedPath = ret ? pkgPath : [XUtils resolvePath:pkgPath usingWorkspace:[app getWorkspace]];
+    CDVFile *filePlugin = [[[app viewController] commandDelegate] getCommandInstance:@"File"];
+    NSString *resolvedPath = [filePlugin resolveFilePath:pkgPath];
     [self->appManagement installApp:resolvedPath withListener:listener];
 }
 
@@ -65,9 +67,8 @@
     NSString *pkgPath = [arguments objectAtIndex:1];
     id<XInstallListener> listener = [arguments objectAtIndex:2];
 
-    // 处理pkgPath以"/"开始的问题，兼容其为绝对路径以及相对app workspace的情况
-    BOOL ret = [pkgPath hasPrefix:FILE_SEPARATOR] && [[NSFileManager defaultManager] fileExistsAtPath:pkgPath];
-    NSString *resolvedPath = ret ? pkgPath : [XUtils resolvePath:pkgPath usingWorkspace:[app getWorkspace]];
+    CDVFile *filePlugin = [[[app viewController] commandDelegate] getCommandInstance:@"File"];
+    NSString *resolvedPath = [filePlugin resolveFilePath:pkgPath];
     [self->appManagement updateApp:resolvedPath withListener:listener];
 }
 
