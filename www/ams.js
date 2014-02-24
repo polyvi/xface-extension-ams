@@ -64,7 +64,11 @@ var AMS = function(){
 
         xFace.AMS.installApplication ("geolocation.zip",successCallback，errorCallback, statusChanged);
  * @method installApplication
- * @param {String} packagePath              app安装包所在相对路径（相对于当前app的工作空间）
+ * @param {String} packagePath              app安装包路径,支持以下形式<br/>：
+ *          1.相对app workspace的相对路径，例如："myPath/test.zip"<br/>
+ *          2.以“/”开头的绝对路径，例如："/myPath/..."<br/>
+ *          3.file://协议URL，例如："file:///myPath/..."<br/>
+ *          4.通过{{#crossLink "File"}}{{/crossLink}}扩展获取的URL，参见{{#crossLink "Entry/toURL"}}{{/crossLink}}
  * @param {Function} [successCallback]        成功时的回调函数
  * @param {Object} successCallback.info   与app相关信息object,每个object包含如下属性：
  * @param {Number} successCallback.info.type   操作类型,具体类型参考<a href="../classes/AmsOperationType.html" class="crosslink">AmsOperationType</a>
@@ -113,7 +117,7 @@ AMS.prototype.installApplication = function( packagePath, successCallback, error
             console.log(error.type);
             console.log(error.errorcode);
         };
-        xFace.AMS.uninstallApplication ("mengfGeolocation",successCallback，errorCallback);
+        xFace.AMS.uninstallApplication ("appId",successCallback，errorCallback);
  * @method uninstallApplication
  * @param {String} appId                    用于标识待卸载app的id
  * @param {Function} [successCallback]         卸载成功时的回调函数
@@ -281,7 +285,11 @@ AMS.prototype.listPresetAppPackages = function(successCallback, errorCallback)
         };
        xFace.AMS.updateApplication("geolocation.zip",successCallback，errorCallback);
  * @method updateApplication
- * @param {String} packagePath              app更新包所在相对路径（相对于当前app的工作空间）
+ * @param {String} packagePath              app更新包路径,支持以下形式<br/>：
+ *          1.相对app workspace的相对路径，例如："myPath/test.zip"<br/>
+ *          2.以“/”开头的绝对路径，例如："/myPath/..."<br/>
+ *          3.file://协议URL，例如："file:///myPath/..."<br/>
+ *          4.通过{{#crossLink "File"}}{{/crossLink}}扩展获取的URL，参见{{#crossLink "Entry/toURL"}}{{/crossLink}}
  * @param {Function} [successCallback]        更新成功时的回调函数
  * @param {Object}  successCallback.info   与app相关信息object,每个object包含如下属性：
  * @param {Number}  successCallback.info.type   操作类型,具体类型参考<a href="../classes/AmsOperationType.html" class="crosslink">AmsOperationType</a>
