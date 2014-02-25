@@ -47,20 +47,44 @@
   <script type="text/javascript" src="../tests/xface.app.tests.js"></script>
 
   <script type="text/javascript">
-    document.addEventListener('deviceready', function () {
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, fail);
-      function runTest() {
-        var jasmineEnv = jasmine.getEnv();
-        jasmineEnv.updateInterval = 1000;
-        var htmlReporter = new jasmine.HtmlReporter();
-        jasmineEnv.addReporter(htmlReporter);
-        jasmineEnv.specFilter = function(spec) {
-            return htmlReporter.specFilter(spec);
-        };
-        jasmineEnv.execute();
-      }
-      setTimeout(runTest,1000);
-    }, false);
+      var persistent_root, workspace_root;
+
+      document.addEventListener('deviceready', function () {
+          // one-time retrieval of the root file system entry
+          var onError = function(e) {
+              console.log('[ERROR] Problem setting up filesystem for test running! Error to follow.');
+              console.log(JSON.stringify(e));
+          };
+
+          window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
+              function(fileSystem) {
+                  console.log('File API test Init: Setting PERSISTENT FS.');
+                  persistent_root = fileSystem.root;
+
+                  onFileSystemSuccess(fileSystem);
+
+                  window.requestFileSystem(LocalFileSystem.APPWORKSPACE, 0,
+                      function(fileSystem) {
+                          console.log('File API test Init: Setting APPWORKSPACE FS.');
+                          workspace_root = fileSystem.root;
+
+                          onFileSystemSuccess(fileSystem);
+
+                          function runTest() {
+                              var jasmineEnv = jasmine.getEnv();
+                              jasmineEnv.updateInterval = 1000;
+                              var htmlReporter = new jasmine.HtmlReporter();
+                              jasmineEnv.addReporter(htmlReporter);
+                              jasmineEnv.specFilter = function(spec) {
+                                  return htmlReporter.specFilter(spec);
+                              };
+                              jasmineEnv.execute();
+                          }
+
+                          setTimeout(runTest,1000);
+                      }, onError);
+              }, onError);
+      }, false);
 
     function onFileSystemSuccess(fileSystem) {
         doCopy("test.zip", "test.zip", fileSystem);

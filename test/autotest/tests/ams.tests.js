@@ -1,4 +1,28 @@
 describe('AMS (xFace.AMS)', function () {
+    function doCopy(src, target, srcRootEntry, destRootEntry, success, error) {
+        var targetFile = target;
+        var directory;
+        destRootEntry.getDirectory("appPackage", {create: true, exclusive: false}, gotDirEntry, error);
+        function gotDirEntry(dirEntry) {
+            directory = dirEntry;
+            srcRootEntry.getFile(src, {create: false, exclusive: false}, gotFileEntry, error);
+        }
+        function gotFileEntry(fileEntry) {
+            fileEntry.copyTo(directory, targetFile, success, error);
+        }
+    }
+
+    // deletes file, if it exists, then invokes callback
+    var deleteFile = function(rootEntry, fileName, callback) {
+        rootEntry.getFile(fileName, null,
+            // remove file system entry
+            function(entry) {
+                entry.remove(callback, function() { console.log('[ERROR] deleteFile cleanup method invoked fail callback.'); });
+            },
+            // doesn't exist
+            callback);
+    };
+
     it("ams.spec.1 should exist", function () {
         expect(xFace.AMS).toBeDefined();
     });
@@ -563,6 +587,365 @@ describe('AMS (xFace.AMS)', function () {
 
             runs(function () {
                 expect(fail).not.toHaveBeenCalled();
+            });
+        });
+    });
+
+    describe('File Path', function () {
+        it("ams.spec.37 success callback should be called with relative file path", function () {
+            var win = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.appid == 'test').toBe(true);
+                if(!isAndroid()) {
+                    expect(info.type == AmsOperationType.INSTALL).toBe(true);
+                }
+            }),
+            fail = jasmine.createSpy(),
+            status = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.progress == progressValue).toBe(true);
+                progressValue++;
+            });
+
+            var copyWin = jasmine.createSpy("copyWin").andCallFake(function(){
+                runs(function () {
+                    xFace.AMS.installApplication("appPackage/test.zip", win, fail, status);
+                });
+
+                waitsFor(function () { return status.wasCalled; }, "status never called", Tests.TEST_TIMEOUT);
+                waitsFor(function () { return win.wasCalled || fail.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+                runs(function () {
+                    expect(win).toHaveBeenCalled();
+                    expect(fail).not.toHaveBeenCalled();
+                });
+            });
+
+            var copyFail = jasmine.createSpy("copyFail");
+
+            deleteFile(workspace_root, "appPackage/test.zip", function(){
+                doCopy("test.zip", "test.zip", workspace_root, workspace_root, copyWin, copyFail);
+            });
+
+            waitsFor(function () { return copyWin.wasCalled || copyFail.wasCalled; }, "copyWin never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(copyWin).toHaveBeenCalled();
+                expect(copyFail).not.toHaveBeenCalled();
+            });
+
+            this.after(function() {
+                xFace.AMS.uninstallApplication("test");
+            });
+        });
+
+        it("ams.spec.38 success callback should be called with absolute appworkspace file path", function () {
+            var win = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.appid == 'test').toBe(true);
+                if(!isAndroid()) {
+                    expect(info.type == AmsOperationType.INSTALL).toBe(true);
+                }
+            }),
+            fail = jasmine.createSpy(),
+            status = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.progress == progressValue).toBe(true);
+                progressValue++;
+            });
+
+            var copyWin = jasmine.createSpy("copyWin").andCallFake(function(){
+                var cdvfileURL = workspace_root.toURL() + "appPackage/test.zip";
+                var unsupportedOperation = jasmine.createSpy("Operation not supported");
+                runs(function() {
+                    cordova.exec(function(localPath) {
+                        xFace.AMS.installApplication(localPath, win, fail, status);
+                    }, unsupportedOperation, 'File', '_getLocalFilesystemPath', [cdvfileURL]);
+                });
+
+                waitsFor(function () { return status.wasCalled; }, "status never called", Tests.TEST_TIMEOUT);
+                waitsFor(function () { return win.wasCalled || fail.wasCalled || unsupportedOperation.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+                runs(function() {
+                    if (!unsupportedOperation.wasCalled) {
+                        expect(win).toHaveBeenCalled();
+                        expect(fail).not.toHaveBeenCalled();
+                    }
+                });
+            });
+
+            var copyFail = jasmine.createSpy("copyFail");
+
+            deleteFile(workspace_root, "appPackage/test.zip", function(){
+                doCopy("test.zip", "test.zip", workspace_root, workspace_root, copyWin, copyFail);
+            });
+
+            waitsFor(function () { return copyWin.wasCalled || copyFail.wasCalled; }, "copyWin never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(copyWin).toHaveBeenCalled();
+                expect(copyFail).not.toHaveBeenCalled();
+            });
+
+            this.after(function() {
+                xFace.AMS.uninstallApplication("test");
+            });
+        });
+
+        it("ams.spec.39 success callback should be called with absolute persisent file path", function () {
+            var win = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.appid == 'test').toBe(true);
+                if(!isAndroid()) {
+                    expect(info.type == AmsOperationType.INSTALL).toBe(true);
+                }
+            }),
+            fail = jasmine.createSpy(),
+            status = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.progress == progressValue).toBe(true);
+                progressValue++;
+            });
+
+            var copyWin = jasmine.createSpy("copyWin").andCallFake(function(){
+                var cdvfileURL = persistent_root.toURL() + "appPackage/test.zip";
+                var unsupportedOperation = jasmine.createSpy("Operation not supported");
+                runs(function() {
+                    cordova.exec(function(localPath) {
+                        xFace.AMS.installApplication(localPath, win, fail, status);
+                    }, unsupportedOperation, 'File', '_getLocalFilesystemPath', [cdvfileURL]);
+                });
+
+                waitsFor(function () { return status.wasCalled; }, "status never called", Tests.TEST_TIMEOUT);
+                waitsFor(function () { return win.wasCalled || fail.wasCalled || unsupportedOperation.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+                runs(function() {
+                    if (!unsupportedOperation.wasCalled) {
+                        expect(win).toHaveBeenCalled();
+                        expect(fail).not.toHaveBeenCalled();
+                    }
+                });
+            });
+
+            var copyFail = jasmine.createSpy("copyFail");
+
+            deleteFile(persistent_root, "appPackage/test.zip", function(){
+                doCopy("test.zip", "test.zip", workspace_root, persistent_root, copyWin, copyFail);
+            });
+
+            waitsFor(function () { return copyWin.wasCalled || copyFail.wasCalled; }, "copyWin never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(copyWin).toHaveBeenCalled();
+                expect(copyFail).not.toHaveBeenCalled();
+            });
+
+            this.after(function() {
+                xFace.AMS.uninstallApplication("test");
+            });
+        });
+
+        it("ams.spec.40 success callback should be called with appworkspace file url", function () {
+            var win = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.appid == 'test').toBe(true);
+                if(!isAndroid()) {
+                    expect(info.type == AmsOperationType.INSTALL).toBe(true);
+                }
+            }),
+            fail = jasmine.createSpy(),
+            status = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.progress == progressValue).toBe(true);
+                progressValue++;
+            });
+
+            var copyWin = jasmine.createSpy("copyWin").andCallFake(function(){
+                var cdvfileURL = workspace_root.toURL() + "appPackage/test.zip";
+                var unsupportedOperation = jasmine.createSpy("Operation not supported");
+                runs(function() {
+                    cordova.exec(function(localPath) {
+                        xFace.AMS.installApplication("file://" + localPath, win, fail, status);
+                    }, unsupportedOperation, 'File', '_getLocalFilesystemPath', [cdvfileURL]);
+                });
+
+                waitsFor(function () { return status.wasCalled; }, "status never called", Tests.TEST_TIMEOUT);
+                waitsFor(function () { return win.wasCalled || fail.wasCalled || unsupportedOperation.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+                runs(function() {
+                    if (!unsupportedOperation.wasCalled) {
+                        expect(win).toHaveBeenCalled();
+                        expect(fail).not.toHaveBeenCalled();
+                    }
+                });
+            });
+
+            var copyFail = jasmine.createSpy("copyFail");
+
+            deleteFile(workspace_root, "appPackage/test.zip", function(){
+                doCopy("test.zip", "test.zip", workspace_root, workspace_root, copyWin, copyFail);
+            });
+
+            waitsFor(function () { return copyWin.wasCalled || copyFail.wasCalled; }, "copyWin never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(copyWin).toHaveBeenCalled();
+                expect(copyFail).not.toHaveBeenCalled();
+            });
+
+            this.after(function() {
+                xFace.AMS.uninstallApplication("test");
+            });
+        });
+
+        it("ams.spec.41 success callback should be called with persisent file url", function () {
+            var win = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.appid == 'test').toBe(true);
+                if(!isAndroid()) {
+                    expect(info.type == AmsOperationType.INSTALL).toBe(true);
+                }
+            }),
+            fail = jasmine.createSpy(),
+            status = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.progress == progressValue).toBe(true);
+                progressValue++;
+            });
+
+            var copyWin = jasmine.createSpy("copyWin").andCallFake(function(){
+                var cdvfileURL = persistent_root.toURL() + "appPackage/test.zip";
+                var unsupportedOperation = jasmine.createSpy("Operation not supported");
+                runs(function() {
+                    cordova.exec(function(localPath) {
+                        xFace.AMS.installApplication("file://" + localPath, win, fail, status);
+                    }, unsupportedOperation, 'File', '_getLocalFilesystemPath', [cdvfileURL]);
+                });
+
+                waitsFor(function () { return status.wasCalled; }, "status never called", Tests.TEST_TIMEOUT);
+                waitsFor(function () { return win.wasCalled || fail.wasCalled || unsupportedOperation.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+                runs(function() {
+                    if (!unsupportedOperation.wasCalled) {
+                        expect(win).toHaveBeenCalled();
+                        expect(fail).not.toHaveBeenCalled();
+                    }
+                });
+            });
+
+            var copyFail = jasmine.createSpy("copyFail");
+
+            deleteFile(persistent_root, "appPackage/test.zip", function(){
+                doCopy("test.zip", "test.zip", workspace_root, persistent_root, copyWin, copyFail);
+            });
+
+            waitsFor(function () { return copyWin.wasCalled || copyFail.wasCalled; }, "copyWin never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(copyWin).toHaveBeenCalled();
+                expect(copyFail).not.toHaveBeenCalled();
+            });
+
+            this.after(function() {
+                xFace.AMS.uninstallApplication("test");
+            });
+        });
+
+        it("ams.spec.42 success callback should be called with appworkspace cdvfile url", function () {
+            var win = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.appid == 'test').toBe(true);
+                if(!isAndroid()) {
+                    expect(info.type == AmsOperationType.INSTALL).toBe(true);
+                }
+            }),
+            fail = jasmine.createSpy(),
+            status = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.progress == progressValue).toBe(true);
+                progressValue++;
+            });
+
+            var cdvfileURL = workspace_root.toURL() + "appPackage/test.zip";
+
+            var copyWin = jasmine.createSpy("copyWin").andCallFake(function(){
+                runs(function () {
+                    xFace.AMS.installApplication(cdvfileURL, win, fail, status);
+                });
+
+                waitsFor(function () { return status.wasCalled; }, "status never called", Tests.TEST_TIMEOUT);
+                waitsFor(function () { return win.wasCalled || fail.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+                runs(function () {
+                    expect(win).toHaveBeenCalled();
+                    expect(fail).not.toHaveBeenCalled();
+                });
+            });
+
+            var copyFail = jasmine.createSpy("copyFail");
+
+            deleteFile(workspace_root, "appPackage/test.zip", function(){
+                doCopy("test.zip", "test.zip", workspace_root, workspace_root, copyWin, copyFail);
+            });
+
+            waitsFor(function () { return copyWin.wasCalled || copyFail.wasCalled; }, "copyWin never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(copyWin).toHaveBeenCalled();
+                expect(copyFail).not.toHaveBeenCalled();
+            });
+
+            this.after(function() {
+                xFace.AMS.uninstallApplication("test");
+            });
+        });
+
+        it("ams.spec.43 success callback should be called with persisent cdvfile url", function () {
+            var win = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.appid == 'test').toBe(true);
+                if(!isAndroid()) {
+                    expect(info.type == AmsOperationType.INSTALL).toBe(true);
+                }
+            }),
+            fail = jasmine.createSpy(),
+            status = jasmine.createSpy().andCallFake(function(info) {
+                expect(typeof info == 'string'|| typeof info == 'object').toBe(true);
+                expect(info.progress == progressValue).toBe(true);
+                progressValue++;
+            });
+
+            var cdvfileURL = persistent_root.toURL() + "appPackage/test.zip";
+
+            var copyWin = jasmine.createSpy("copyWin").andCallFake(function(){
+                runs(function () {
+                    xFace.AMS.installApplication(cdvfileURL, win, fail, status);
+                });
+
+                waitsFor(function () { return status.wasCalled; }, "status never called", Tests.TEST_TIMEOUT);
+                waitsFor(function () { return win.wasCalled || fail.wasCalled; }, "win never called", Tests.TEST_TIMEOUT);
+
+                runs(function () {
+                    expect(win).toHaveBeenCalled();
+                    expect(fail).not.toHaveBeenCalled();
+                });
+            });
+
+            var copyFail = jasmine.createSpy("copyFail");
+
+            deleteFile(persistent_root, "appPackage/test.zip", function(){
+                doCopy("test.zip", "test.zip", workspace_root, persistent_root, copyWin, copyFail);
+            });
+
+            waitsFor(function () { return copyWin.wasCalled || copyFail.wasCalled; }, "copyWin never called", Tests.TEST_TIMEOUT);
+
+            runs(function () {
+                expect(copyWin).toHaveBeenCalled();
+                expect(copyFail).not.toHaveBeenCalled();
+            });
+
+            this.after(function() {
+                xFace.AMS.uninstallApplication("test");
             });
         });
     });
