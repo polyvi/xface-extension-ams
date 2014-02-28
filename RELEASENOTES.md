@@ -37,3 +37,12 @@
  *  batch modify .reviewboard
  *  Increase tester test experience in StartParams test and apps communication test
  *  Incremented plugin version on dev branch to 1.0.1-dev
+
+## 1.0.2 (Fri Feb 28 2014)
+
+
+ *  Added auto tests for resolving file path.
+ *  Update descriptions for package path.
+ *  Add a dependency to cordova file plugin
+ *  [iOS]Invoke file plugin resolveFilePath: method to process file path
+ *  Incremented plugin version on dev branch to 1.0.2-dev
