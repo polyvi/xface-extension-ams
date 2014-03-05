@@ -32,8 +32,9 @@
 #import <XFace/XConstants.h>
 #import <XFace/XAppManagement.h>
 #import <XFace/XRuntime.h>
-#import <xFace/XRuntime_Privates.h>
 #import <xFace/XJavaScriptEvaluator.h>
+#import <xFace/XRootViewController.h>
+#import <Cordova/CDVWebViewDelegate.h>
 
 #import "XAmsImpl.h"
 #import "XAmsExt.h"
@@ -67,10 +68,10 @@
 
 - (void)pluginInitialize
 {
-    //FIXME:获取appManagement的代码有待美化
-    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    XRuntime *runtime = [appDelegate performSelector:@selector(runtime)];
-    XAppManagement *appManagement = [runtime performSelector:@selector(appManagement)];
+    id rootVC = [self viewController];
+    NSAssert([rootVC isKindOfClass:[XRootViewController class]], nil);
+    XRuntime *runtime = [rootVC valueForKey:@"runtime"];
+    XAppManagement *appManagement = [runtime valueForKey:@"appManagement"];
 
     self->ams = [[XAmsImpl alloc] init:appManagement];
 }
