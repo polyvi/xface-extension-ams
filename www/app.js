@@ -75,6 +75,20 @@ var start = channel.create("start");
  */
 var close = channel.create("close");
 
+/**
+ * 在库模式中，当前应用收到第三方程序发送的消息时，该事件被触发（Android, iOS）<br/>
+ * @example
+        function handler(data) {
+            console.log("Received message: " + data);
+        }
+        xFace.app.addEventListener("client", handler);
+ * @event client
+ * @param {String} data 第三方程序发送的数据
+ * @platform Android, iOS
+ * @since 3.1.20
+ */
+var client = channel.create("client");//FIXME:添加client事件后，将app.js定义在ams扩展中是否合适？
+
 var app =
 {
     /**
@@ -87,7 +101,7 @@ var app =
      * @method addEventListener
      * @param {String} evt 事件类型，仅支持"message", "start", "close"
      * @param {Function} handler 事件触发时的回调函数
-     * @param {String} handler.data 当注册的事件为"message"事件时有效，用于接收应用之间通信时传递的数据
+     * @param {String} handler.data 当注册的事件为"message"事件或“client”事件时有效，用于接收应用之间或xFace和第三方程序通信时传递的数据
      * @platform Android, iOS, WP8
      * @since 3.0.0
      */
@@ -99,6 +113,8 @@ var app =
             start.subscribe(handler);
         }else if(e == "close"){
             close.subscribe(handler);
+        }else if(e == "client"){
+            client.subscribe(handler);
         }
     },
 
@@ -128,23 +144,31 @@ var app =
             start.unsubscribe(handler);
         }else if(e == "close"){
             close.unsubscribe(handler);
+        }else if(e == "client"){
+            client.unsubscribe(handler);
         }
 
     },
 
     /**
      * 引擎触发应用相关事件的入口函数
+     * param {String} evt 事件类型，支持"message", "start", "close"
+     * param {String} arg 事件参数。
+     *                对于message事件，该参数是消息的id；<br/>
+     *                对于client事件，该参数是信息内容。 <br/>
      */
-    fireAppEvent: function(evt, id){
+    fireAppEvent: function(evt, arg){
         var e = evt.toLowerCase();
         if( e == "message"){
-           var data = localStorage.getItem(id);
-           localStorage.removeItem(id);
+           var data = localStorage.getItem(arg);
+           localStorage.removeItem(arg);
            message.fire(data);
         }else if(e == "start"){
             start.fire();
         }else if(e == "close"){
             close.fire();
+        }else if(e == "client"){
+            client.fire(arg);
         }
     },
 
