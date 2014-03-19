@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="com.polyvi.xface.extension.ams"
-      version="1.0.3-dev">
+      version="1.0.3">
 
     <name>AMS</name>
     <author>PolyVi Inc.</author>

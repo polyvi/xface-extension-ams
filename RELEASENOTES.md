@@ -46,3 +46,12 @@
  *  Add a dependency to cordova file plugin
  *  [iOS]Invoke file plugin resolveFilePath: method to process file path
  *  Incremented plugin version on dev branch to 1.0.2-dev
+
+
+## 1.0.3 (Wed Mar 19 2014)
+
+
+ *  change the large files test to small files
+ *  [iOS]Update the process of getting runtime instance.
+ *  Add client event to app.js
+ *  Incremented plugin version on dev branch to 1.0.3-dev
