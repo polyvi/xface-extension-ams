@@ -39,7 +39,6 @@
 #import "XAmsImpl.h"
 #import "XAmsExt.h"
 #import "XAms.h"
-#import "AppDelegate.h"
 
 // 定义构造ExtResult使用的key常量
 #define EXTENSION_RESULT_APP_ID             @"appid"
