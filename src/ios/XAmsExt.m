@@ -150,7 +150,7 @@
     }
 
     // 将包名转换为相对路径（相对于app workspace）
-    const int count = [packageNames count];
+    const NSUInteger count = [packageNames count];
     for(int i = 0; i < count; i++)
     {
         NSString *packageName = [packageNames objectAtIndex:i];
@@ -204,8 +204,8 @@
     [item setObject:CAST_TO_NSNULL_IF_NIL([info name]) forKey:EXTENSION_RESULT_APP_NAME];
     [item setObject:CAST_TO_NSNULL_IF_NIL([info version]) forKey:EXTENSION_RESULT_APP_VERSION];
     [item setObject:CAST_TO_NSNULL_IF_NIL([info type]) forKey:EXTENSION_RESULT_APP_TYPE];
-    [item setObject:[NSNumber numberWithInt:[info width]] forKey:EXTENSION_RESULT_APP_WIDTH];
-    [item setObject:[NSNumber numberWithInt:[info height]] forKey:EXTENSION_RESULT_APP_HEIGHT];
+    [item setObject:[NSNumber numberWithInteger:[info width]] forKey:EXTENSION_RESULT_APP_WIDTH];
+    [item setObject:[NSNumber numberWithInteger:[info height]] forKey:EXTENSION_RESULT_APP_HEIGHT];
 
     [item setObject:CAST_TO_NSNULL_IF_NIL([app getIconURL]) forKey:EXTENSION_RESULT_APP_ICON];
     [item setObject:CAST_TO_NSNULL_IF_NIL(info.iconBgColor) forKey:EXTENSION_RESULT_APP_ICON_BGCOLOR];
